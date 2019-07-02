@@ -1,12 +1,12 @@
 function choose(element) {
     var name = element.getAttribute("name");
-    var checked = $(element).prop("checked");
+    var isChecked = $(element).prop("checked");
 
-    if (name === "bookmark" && checked) {
+    if (name === "bookmark" && isChecked) {
         bookMark(name);
-    } else if (name === "tab" && checked) {
+    } else if (name === "tab" && isChecked) {
         tab(name);
-    } else if (name === "lasttab" && checked) {
+    } else if (name === "lasttab" && isChecked) {
         lastTab(name);
     }
 }

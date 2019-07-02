@@ -1,0 +1,22 @@
+{
+  "manifest_version": 2,
+  "name": "TMBManage",
+  "description": "解决Chrome书签、标签、last tab等痛点问题",
+  "version": "1.0.0",
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png"
+  },
+
+  "permissions": [
+    "tabs",
+    "storage"
+  ],
+
+  "browser_action": {
+    "default_icon": "icons/icon48.png",
+    "default_title": "TMBManage",
+    "default_popup": "popup.html"
+  }
+}

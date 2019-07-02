@@ -1,0 +1,37 @@
+body{
+    width: 230px;
+    height: 170px;
+    font-family: "Microsoft YaHei UI";
+    color: #333;
+    background: #fefefe;
+}
+
+.title{
+    text-align: left;
+    font-weight: bold;
+    font-size: medium;
+    line-height: 2;
+}
+
+.option{
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.checkbox{
+    vertical-align: middle;
+    margin-top: 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+

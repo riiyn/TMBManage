@@ -1,41 +1,86 @@
-// lasttab();
-chrome.storage.onChanged.addListener(function(changes, namespace) {
-    for (key in changes) {
-        var storageChange = changes[key];
-        console.log('存储键“%s”（位于“%s”命名空间中）已更改。' +
-            '原来的值为“%s”，新的值为“%s”。',
-            key,
-            namespace,
-            storageChange.oldValue,
-            storageChange.newValue);
-    }
-    console.log(changes);
-});
+/***********************************************************************************************************************
+ **                                                                                                                   **
+ **                                     关闭最后一个标签页时不关闭浏览器                                              **
+ **                                                   start                                                           **
+***********************************************************************************************************************/
+chrome.tabs.onRemoved.addListener(function (tabId, removeInfo) {
+    chrome.storage.sync.get("lasttab", function (lasttab) {
+        var isLast = lasttab["lasttab"];
+        console.log("是否设置【关闭最后一个标签页时打开新的标签页】：" + isLast);
+        if (isLast) {
+            queryLasttab();
+            if (removeInfo["isWindowClosing"] === false) {
+                chrome.storage.sync.get(null, function (items) {
+                    console.log("*************** done for done ***************");
+                    // for (key in items) {
+                    //     console.log(key + ": " +items[key]);
+                    // }
+                    console.log("What am I living for ?");
+                    console.log("*************** done for done ***************");
+                    chrome.storage.sync.get("lastTabId", function (item) {
+                        var flag = false;
+                        var lasttabId;
+                        if (item.length !== 0) {
+                            lasttabId = item["lastTabId"];
+                        }else {
+                            flag = true;
+                        }
+                        if (tabId === lasttabId || lasttabId === false) {
+                            flag = true;
+                        }
 
-function lasttab(){
-    var lasttabId = queryLasttab();
-    alert("lasttabId " + lasttabId);
-    chrome.tabs.onRemoved.addListener(function (tabId, removeInfo) {
-        if (removeInfo["isWindowClosing"] === false) {
-            if (tabId === lasttabId) {// 关闭的标签页是last tab
-                createTab();
-            }else {
-                console.log("关闭的标签页不是last tab");
-                alert("关闭的标签页不是last tab");
+                        console.log("要关闭的标签页的ID是 " + tabId);
+                        console.log("the lastTab id that in storage is " + lasttabId);
+                        console.log("flag is " + flag);
+                        if (flag) {
+                            console.log("need to create new tab");
+                            chrome.tabs.create({index: 0, active: true}, function (tab) {
+                                console.log("created new tab！id is " + tab.id);
+                                // console.log("create new tab！id is " + tab.id);
+                                chrome.storage.sync.set({"lastTabId": tab.id}, function () {
+                                    console.log("因创建新标签页而更改lastTabId！new value is " + tab.id);
+                                });
+                            });
+                        }else {
+                            console.log("this tab is not last");
+                        }
+                    });
+                });
+            } else {
+                console.log("关闭浏览器！");
             }
         }
     });
-}
+});
 
 function queryLasttab() {
-    chrome.tabs.query({'index': 0, 'currentWindow': true}, function (tab) {
-        return tab.id;
-    });
-}
+    chrome.windows.getCurrent({populate: true}, function (currentWindow) {
+        var res;
+        if (currentWindow === undefined) {
+            return;
+        }else {
+            var tabs = currentWindow["tabs"];
 
-function createTab() {
-    chrome.tabs.create({'index': 0, 'active': true}, function (tab) {
-        console.log("create new tab！id is " + tab.id);
-        alert("create new tab！id is " + tab.id);
+            if (tabs.length === 0) {
+                res = false;
+            }else {
+                // console.log(tabs[0]);
+                // console.log(tabs);
+                var lasttab = tabs[0];
+                console.log("the lastTab id that in current window is " + lasttab.id);
+                res = lasttab.id;
+            }
+        }
+
+        chrome.storage.sync.set({"lastTabId": res}, function () {
+            console.log("lastTabId已更改！new value is " + res);
+        });
+
     });
 }
+/***********************************************************************************************************************
+ **                                                                                                                   **
+ **                                                    end                                                            **
+ **                                                                                                                   **
+ ***********************************************************************************************************************/
+

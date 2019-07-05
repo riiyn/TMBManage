@@ -1,7 +1,7 @@
 function saveSettings(data) {
     if (!data) {
         console.log("错误：没有指定值！");
-        return
+        return;
     }
     chrome.storage.sync.set(data, function () {
         console.log("设置已更改！");
@@ -44,8 +44,10 @@ $(document).ready(function () {
             saveSettings(items);
         }
         for (key in items) {
-            var storageArea = items[key];
-            $("#" + key).prop("checked", storageArea);
+            if (key !== "lastTabId") {
+                var storageArea = items[key];
+                $("#" + key).prop("checked", storageArea);
+            }
         }
         console.log(items);
     });

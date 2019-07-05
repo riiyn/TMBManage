@@ -1,48 +1,3 @@
-function choose(element) {
-    var name = element.getAttribute("name");
-    var isChecked = $(element).prop("checked");
-
-    if (name === "bookmark" && isChecked) {
-        bookMark(name);
-    } else if (name === "tab" && isChecked) {
-        tab(name);
-    } else if (name === "lasttab" && isChecked) {
-        lastTab(name);
-    }
-}
-
-function bookMark(element) {
-    if (element === "bookmark") {
-        // 在新标签页中打开书签
-        alert("在新标签页中打开书签")
-    }
-    console.log("修改成功！")
-    // alert("修改成功！")
-}
-
-function tab(element) {
-    if (element === "tab") {
-        // 在新标签页中打开链接
-        alert("在新标签页中打开链接");
-    }
-}
-
-function lastTab(element) {
-    chrome.tabs.query({'currentWindow': true}, function (tabs) {
-        if (tabs.length === 1) {
-            if (tabs.index === 0 && tabs.active === true) {
-                console.log("this is last tab" + tab.id);
-                console.log("this tab is active：" + tab.index);
-                console.log(tab);
-            }else {
-                console.log("当前标签页不是最后一个标签页！");
-            }
-        }else {
-            console.log("当前窗口含有多个标签页！");
-        }
-    });
-}
-
 function saveSettings(data) {
     if (!data) {
         console.log("错误：没有指定值！");
@@ -68,12 +23,7 @@ function saveSettings(data) {
 var array = ['bookmark', 'tab', 'lasttab'];
 $(document).ready(function () {
     array.forEach(function (id) {
-        var obj = $('#' + id);
-        obj.click(function () {
-            choose(this);
-            console.log(id + " set done");
-        });
-        obj.change(function () {
+        $('#' + id).change(function () {
             var check = $('#' + id).prop("checked");
             var data = {};
             data[id] = check;
@@ -97,6 +47,7 @@ $(document).ready(function () {
             var storageArea = items[key];
             $("#" + key).prop("checked", storageArea);
         }
+        console.log(items);
     });
 });
 

@@ -16,9 +16,18 @@
   ],
 
   "background": {
-    "scripts": ["js/background.js"],
+    "scripts": ["js/eventPage.js"],
     "persistent": false
   },
+
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "exclude_matches": ["https://www.baidu.com/s?*"],
+      "js": ["js/jquery.js", "js/content-script.js"],
+      "run_at": "document_start"
+    }
+  ],
 
   "browser_action": {
     "default_icon": "icons/icon48.png",

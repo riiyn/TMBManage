@@ -1,3 +1,15 @@
+chrome.runtime.onInstalled.addListener(function (details) {
+    console.log(details);
+    chrome.storage.sync.get(null, function (items) {
+        if (JSON.stringify(items) === '{}') { // 初始加载扩展，存储为空，默认指定全部选中。
+            items = {'bookmark': true, 'tab': true, 'lasttab': true};
+            // 保存到storage
+            chrome.storage.sync.set(items, function () {
+                console.log("设置已更改！");
+            });
+        }
+    });
+});
 /***********************************************************************************************************************
  **                                                                                                                   **
  **                                     关闭最后一个标签页时不关闭浏览器                                              **
@@ -105,7 +117,13 @@ function queryLasttab() {
  **                                              在新标签页中打开书签                                                 **
  **                                                     start                                                         **
  **********************************************************************************************************************/
-
+// chrome.bookmarks.getChildren("1", function (results) {
+//     results.forEach(function (bm) {
+//
+//         console.log(bm.title + "：" + bm.url);
+//     });
+//
+// });
 /***********************************************************************************************************************
  **                                                                                                                   **
  **                                                       end                                                         **
